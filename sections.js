@@ -16,159 +16,16 @@ var scrollVis = function () {
   var y_scale = d3.scaleLinear().range([height - (top_bottom_margin*2),0]);
   // define colours
   //all_colours - used during 1st section when survival rates not needed variable == "both".
-  //var all_colours = { Men: '#1f78b4', Women: '#a6cee3',all:"grey",
+  var all_colours = { Men: '#1f78b4', Women: '#a6cee3',all:"grey",
   "0 - 15":"#addd8e","15 - 30":"#78c679","30 - 45":"#41ab5d","45 - 70":"#238443",">= 70":"#005a32",
   "1st Class": "#9e9ac8", "2nd Class":"#756bb1","3rd Class":"#54278f"};
   //survival colours - used during 2nd section when looking at survival rates.
-  //var survival_colours = {0:"#fb9a99", 1: "#404040"}
+  var survival_colours = {0:"#fb9a99", 1: "#404040"}
   // define functions for the current scroll setting - inherited from JV
   var activateFunctions = [];
   //define data object and svg.
   var vis_data = {};
   var svg = "";
-  
-  function random_test(){
-	  
-	  d3.csv('random.csv', function (data) {
-  d3.csv('Initial.csv', function(data1){
-  // Variables
-  var body = d3.select('body')
-	var margin = { top: 100, right: 200, bottom: 50, left: 50 }
-	var h = 500 - margin.top - margin.bottom
-	var w = 500 - margin.left - margin.right
-	var formatPercent = d3.format('.2%')
-	// Scales
-  //var colorScale = d3.scale.category20()
-  var xScale = d3.scale.linear()
-    .domain([
-    	d3.min([0,d3.min(data,function (d) { return d.Index })]),
-    	d3.max([0,d3.max(data,function (d) { return d.Index })])
-    	])
-    .range([0,w])
-  var yScale = d3.scale.linear()
-    .domain([0,18])
-    .range([h,0])
-	// SVG
-	var svg = body.append('svg')
-	    .attr('height',h + margin.top + margin.bottom)
-	    .attr('width',w + margin.left + margin.right)
-	  .append('g')
-	    .attr('transform','translate(' + margin.left + ',' + margin.top + ')')
-	// X-axis
-	var xAxis = d3.svg.axis()
-	  .scale(xScale)
-	  .ticks(0)
-	  .orient('bottom')
-  // Y-axis
-	var yAxis = d3.svg.axis()
-	  .scale(yScale)
-	  .ticks(10)
-	  .orient('left')
-  // Circles
-  var circles = svg.selectAll('circle')
-      .data(data1)
-      .enter()
-    .append('circle')
-      .attr('cx',function (d) { return xScale(d.Index) })
-      .attr('cy',function (d) { return yScale(d.Value) })
-      .attr('r','3')
-      .attr('stroke-width',1)
-      .attr('fill','#000000')
-      .on('mouseover', function () {
-        d3.select(this)
-          .transition()
-          .duration(500)
-          .attr('r',3)
-      })
-      .on('mouseout', function () {
-        d3.select(this)
-          .transition()
-          .duration(500)
-          .attr('r',3)
-      })
-    .append('title') // Tooltip
-      .text(function (d) { return d.variable +
-                           '\nReturn: '  +
-                           '\nStd. Dev.: '})
-  
-  // Circles
-  var circles = svg.selectAll('circle')
-      .data(data)
-      .enter()
-    .append('circle')
-      .attr('cx',function (d) { return xScale(d.Index) })
-      .attr('cy',function (d) { return yScale(d.Value) })
-      .attr('r','3')
-      .attr('stroke-width',1)
-      .attr('fill','#cecece4D')
-      .on('mouseover', function () {
-        d3.select(this)
-          .transition()
-          .duration(500)
-          .attr('r',3)
-      })
-      .on('mouseout', function () {
-        d3.select(this)
-          .transition()
-          .duration(500)
-          .attr('r',3)
-      })
-    .append('title') // Tooltip
-      .text(function (d) { return d.variable +
-                           '\nReturn: '  +
-                           '\nStd. Dev.: '})
-  
-  // X-axis
-  svg.append('g')
-      .attr('class','axis')
-      .attr('transform', 'translate(0,' + h + ')')
-      .call(xAxis)
-    .append('text') // X-axis Label
-      .attr('class','label')
-      .attr('y',10)
-      .attr('x',200)
-      .attr('dy','.71em')
-      .style('text-anchor','end')
-      .text('Test Candidates')
-	  
-	
-// Y-axis
-  svg.append('g')
-      .attr('class', 'axis')
-      .call(yAxis)
-    .append('text') // y-axis Label
-      .attr('class','label')
-      .attr('transform','rotate(-90)')
-      .attr('x',0)
-      .attr('y',5)
-      .attr('dy','.71em')
-      .style('text-anchor','end')
-      .text('Ionic Conductivity')
-
-
-   svg.append('g')
-      .attr('class','axis')
-      .attr('transform', 'translate(0,' + h + ')')
-      .call(xAxis)
-    .append('text') // X-axis Label
-      .attr('class','label')
-      .attr('y',-380)
-      .attr('x',165)
-      .attr('dy','.71em')
-      .style('text-anchor','end')
-      .text('Random')
-
-  })
-})
-
-//asd is index
-//aror is value
-
-	  
-	  
-  }
-	
-	
 
   //initialise chart - function inherited from JV, content not.
   var chart = function (selection) {
@@ -201,9 +58,8 @@ var scrollVis = function () {
   //set up sections for scrolling.
   var set_up_sections = function (my_data) {
     // variables to be sent to draw_dots when the scroll index changes.
-    activateFunctions[0] = random_test;  // blank
-    /*
-	activateFunctions[1] = ["all","both",0];   // all, survived not shown
+    activateFunctions[0] = ["none","both",0];  // blank
+    activateFunctions[1] = ["all","both",0];   // all, survived not shown
     activateFunctions[2] = ["sex","both",2000]; // sex, survived not shown
     activateFunctions[3] = ["age","both",2000]; // age, survived not shown
     activateFunctions[4] = ["p_class","both",2000]; // class, survived not shown
@@ -213,7 +69,7 @@ var scrollVis = function () {
     activateFunctions[8] = ["p_class","survived",2000];// class, show survived
     activateFunctions[9] = ["ch_1_2","survived",2000]; // conclusion 1 - 1st and 2nd class children (< 15)
     activateFunctions[10] = ["w_ch_1_2","survived",2000];//conclusion 2 - 1st and 2nd class women & children
-    */
+
   };
   //part inherited from JV.
   //change is that I am repositioning the dots depending on the data every time the scroll index changes.
@@ -232,7 +88,7 @@ var scrollVis = function () {
     draw_dots(activateFunctions[index][0],activateFunctions[index][1],activateFunctions[index][2]);
     lastIndex = activeIndex;
   };
-/*
+
   var draw_dots = function (data_class, fill_type,transition){
     //define data - empty if none (ie first scroll index).
     if(data_class == "none"){
@@ -323,7 +179,6 @@ var scrollVis = function () {
   // return chart function
   return chart;
 };
-*/
 
 //JV function - with some elements removed.
 function display(data) {
@@ -353,6 +208,7 @@ function display(data) {
 }
 
 // load data and display
+d3.csv('data/titanic_data.csv', display);
 
 //data functions.  returns 6 different datasets, all with 891 entries (passenger count)
 //data is split into sections - ie ["male","female"], given a per_row count - ie two_per_row
@@ -364,7 +220,7 @@ function display(data) {
 //ch_1_2 and w_ch_1_2 are custom sections linked to my conclusions (ie children under 15 in 1st and 2nd Class v remaining passengers)
 
 
-//function convert_data(my_data){
+function convert_data(my_data){
 
   var all_per_row = 45;
   var two_per_row = 20;
@@ -395,7 +251,7 @@ function display(data) {
     return positions;
   }
 
-  //function age_class(my_data,col_per_row){
+  function age_class(my_data,col_per_row){
     var positions = [];
     var filtered_data = my_data.filter(function(d){
       return (d.Age < 15 && d.Pclass < 3)
@@ -408,7 +264,7 @@ function display(data) {
     return positions;
   }
 
-  //function get_positions(my_data,col_per_row,variables,field){
+  function get_positions(my_data,col_per_row,variables,field){
 
     var p_class_labels = {1:"1st Class",2: "2nd Class",3:"3rd Class"};
     var positions = [], band = "",p_class="";
@@ -439,7 +295,7 @@ function display(data) {
 
   }
 
-  //function populate(my_data,band,p_class,col_per_row){
+  function populate(my_data,band,p_class,col_per_row){
 
     my_data = my_data.sort(function(a,b){return d3.descending(a.Survived, b.Survived)});
     var my_row = 0, my_column = 0;
